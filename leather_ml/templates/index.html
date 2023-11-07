@@ -1,137 +1,93 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>upload</title>
-	<link rel="stylesheet" href="{% static 'css/tw.css' %}">
-	<style>
-		body {
-			background: rgba(0, 0, 0, 0.9);
-		}
-
-		form {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			margin-top: -100px;
-			margin-left: -250px;
-			width: 500px;
-			height: 200px;
-			border: 4px dashed #fff;
-		}
-
-		form p {
-			width: 100%;
-			height: 100%;
-			text-align: center;
-			line-height: 170px;
-			color: #ffffff;
-			font-family: Arial;
-		}
-
-		form input {
-			position: absolute;
-			margin: 0;
-			padding: 0;
-			width: 100%;
-			height: 100%;
-			outline: none;
-			opacity: 0;
-		}
-
-		form button {
-			margin: 0;
-			color: #fff;
-			background: #16a085;
-			border: none;
-			width: 508px;
-			height: 35px;
-			margin-top: -20px;
-			margin-left: -4px;
-			border-radius: 4px;
-			border-bottom: 4px solid #117A60;
-			transition: all .2s ease;
-			outline: none;
-		}
-
-		form button:hover {
-			background: #149174;
-			color: #0C5645;
-		}
-
-		form button:active {
-			border: 0;
-		}
-		.whole{
-			display: block;
-		}
-		.loader {
-			display: none;
-			top: 50%;
-			left: 50%;
-			position: absolute;
-			transform: translate(-50%, -50%);
-		  }
-		  
-		  .loading {
-			border: 2px solid #ccc;
-			width: 60px;
-			height: 60px;
-			border-radius: 50%;
-			border-top-color: #1ecd97;
-			border-left-color: #1ecd97;
-			animation: spin 1s infinite ease-in;
-		  }
-		  
-		  @keyframes spin {
-			0% {
-			  transform: rotate(0deg);
-			}
-		  
-			100% {
-			  transform: rotate(360deg);
-			}
-		  }
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Detection</title>
+    <link rel="stylesheet" href="{% static 'css/index_1.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <!-- main css -->
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+    
 </head>
 
 <body>
+<header class="">
+    <nav class="navbar bg-dark border-bottom sticky-top border-body">
+        <div class="container-fluid">
+            <a class="navbar-brand text-light" href="index">Skin Detection</a>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="logs">Logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="help">Help</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="whole">
+        <div class="d-flex flex-column" style="align-items: center;">
+            <h5 class="text-light mb-auto">Upload Image or Compressed files</h5>
+            <p class="text-light mb-auto">Image files : jpeg,jpg,png,bmp</p>
+            <p class="text-light mb-auto">Compressed files : zip,tar.gz,rar</p>
+        </div>
+        <div class="container-fluid">
+            <div class="container-fluid d-flex justify-content-start align-items-center">
+                <form action="upload" method='post' enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="pic"  lang="es" class="default-file-input" required/>
+                    <p class="dynamic-message">Drag your files here or click in this area.</p>
+                    {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <p class="form_error text-danger"
+                        style="font-size: 13px; font-style:italic; font-family: open serif; text-align:center ;color: red;" >
+                        {{message}}</p>
+                        {% endif %}
+                        {% endfor %}
+                    <button type="submit" onclick="spinner()">Upload</button>
+    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <div class="loader">
+        <div class="loading">
+        </div>
+    </div>
+</main>
 
-<div class="whole">
-	<form action="upload" method='post' enctype="multipart/form-data">
-		{% csrf_token %}
-		<input type="file" name="pic" lang="es" required>
-		<p>Drag your files here or click in this area.</p>
-		<br>
-		<button type="submit" onclick="spinner()" class="tw-text-[#00ffff]">Upload</button>
-	</form>
-	{% for message in messages %}
-    {% if message.tags == 'error' %}
-    <p class="form_error text-danger"
-    style="font-size: 13px; font-style:italic; font-family: open serif; text-align:center ;color: red;" >
-    {{message}}</p>
-    {% endif %}
-	{% endfor %}
-</div>
-<div class="loader">
-	<div class="loading">
-	</div>
-  </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="../static/JS/index.js"></script>
+    <script type="text/javascript">
+        function spinner() {
+            document.getElementsByClassName("loader")[0].style.display = "block";
+            document.getElementsByClassName("whole")[0].style.display="none";
+        }
+        $(document).ready(function () {
+            $('form input').change(function () {
+                $('form p').text(this.files.length + " file(s) selected");
+            });
+        });
+    </script> 
 </body>
-<script type="text/javascript">
-    function spinner() {
-        document.getElementsByClassName("loader")[0].style.display = "block";
-		document.getElementsByClassName("whole")[0].style.display="none";
-    }
-	$(document).ready(function () {
-		$('form input').change(function () {
-			$('form p').text(this.files.length + " file(s) selected");
-		});
-	});
-</script>  
+
 </html>
